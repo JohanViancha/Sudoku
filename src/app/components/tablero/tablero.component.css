@@ -1,0 +1,58 @@
+
+
+.tablero{
+    width: 45vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3,1fr);
+    row-gap: 20px;
+    column-gap: 20px;
+    padding: 30px;
+    box-sizing: border-box;
+    margin: auto;
+}
+
+.cuadroVacio{
+    background-color: #ca30174f !important;
+}
+
+.cuadroRepetido{
+    color: #ce1a1a !important;
+    border: 1px solid #000;
+}
+
+
+.cuadricula{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3,1fr);
+    
+}
+
+.cuadros{
+    border: 1px solid #000;
+    background-color: transparent;
+    text-align: center;
+    width: 100%;
+    font-size: 55px;
+    outline: none;
+}
+
+.button-finalizar{
+    margin: auto;
+    grid-area: 4/2;
+}
+.btn{
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    background-color: rgb(228, 153, 56);
+    border: 2px solid antiquewhite;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.btn:hover{
+    background-color: rgb(231, 176, 104);
+}
