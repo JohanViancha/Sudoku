@@ -7,7 +7,6 @@
             'cuadroRepetido':this.formSudoku.get('cuadri1cuado'+(item+1))?.errors?.repetido}" 
             maxlength="1" min="1" max="9"/>
         </div>
-
         <div class="cuadricula">
             <input *ngFor="let item of 9 | for" type="text" class="cuadros" 
             [formControlName]="'cuadri2cuado'+(item+1)" [ngClass]="
@@ -26,7 +25,7 @@
             <input *ngFor="let item of 9 | for" type="text" class="cuadros" 
             [formControlName]="'cuadri4cuado'+(item+1)" [ngClass]="
             {'cuadroVacio': this.formSudoku.get('cuadri4cuado'+(item+1))?.errors?.vacio,
-            'cuadroRepetido':this.formSudoku.get('cuadricuado'+(item+1))?.errors?.repetido}" 
+            'cuadroRepetido':this.formSudoku.get('cuadri4cuado'+(item+1))?.errors?.repetido}" 
             maxlength="1" min="1" max="9"/>
         </div>
         <div class="cuadricula">

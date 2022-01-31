@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChange } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Repetidos } from 'src/app/models/Repetidos';
 import { MensajesService } from 'src/app/services/mensajes.service';
@@ -13,7 +13,6 @@ export class TableroComponent implements OnInit {
   formSudoku: FormGroup;
   numerosColumna:any[][] = [[0,1,2],[3,4,5],[6,7,8]];
   numerosFila:any[][] = [[0,3,6],[1,4,7],[2,5,8]];
- 
   constructor(private fb:FormBuilder, private _serviceMensaje:MensajesService) {
     this.formSudoku = fb.group({
       cuadri1cuado1:['', Validators.required],
@@ -111,38 +110,13 @@ export class TableroComponent implements OnInit {
   
 
   ngOnInit(): void {
-    
+    console.log(this.formSudoku.controls);
  }
-
-  /*llenarCuadriculas():void{
-
-    for (let index = 0; index < 9; index++) {
-      let number = [1,2,3,4,5,6,7,8,9];
-      for (let indexsub = 0; index < 9; indexsub++) {
-        if(this.generarNumerosAleatorios(2) == 1){
-          this.arrNumber[index][indexsub] = number[2];
-        }
-         
-      }
-      
-    }
-  }
-
-
-  generarNumerosAleatorios(rango:number):number{
-    return Math.round(Math.random()*rango+1);
-  }
-
-
-  iniciarJuego(){
-
-
-  }*/
 
   async revisarForm(){
    const numberInput = await this.revisarInputVacio();
-   await this.setearError(numberInput,'vacio');
    if(numberInput.length>0){
+      await this.setearError(numberInput,'vacio');
       this._serviceMensaje.mostrarMensaje('Error','Hay error en el sudoku!','warning').then(()=>{
         setTimeout(()=>{
           this.quitarColor(numberInput);
@@ -181,22 +155,35 @@ export class TableroComponent implements OnInit {
       limite = inicio;
 
       //Limita el array por un rango de filas
-      let limitArray = array.slice(limite,limite+=3).concat(array.slice(limite+=6,limite+=3).concat(array.slice(limite+=6,limite+=3)));
+      let limitArray:any = array.slice(limite,limite+=3).concat(array.slice(limite+=6,limite+=3).concat(array.slice(limite+=6,limite+=3)));
 
       //Se recorre cada posición del array limite
-      limitArray.forEach((element,index)=>{   
-        const posicionRepetido = limitArray.findIndex((numero,i)=> (numero === element && i !== index));
+      limitArray.forEach((element:any,index:any)=>{   
+        let posicionRepetido = -1;
+        let posicionToArray = -1;
+  
+        posicionRepetido = limitArray.findIndex((numero:any,posicion:any)=>{
+          if(numero === element && posicion !== index){
+            let cuadricula = fila+this.retornarCuadricula(posicion,'columna');
+            posicionToArray = ((cuadricula-1)*9)+(3*this.retornarCuadricula(i,'fila'))+(this.retornarCuadricula(posicion ,'fila'));
 
-        if(element && posicionRepetido>=0){       
-          let cuadricula = fila+this.retornarCuadricula(posicionRepetido,'columna');
-          console.log((cuadricula-1)*9);
-          console.log(3*this.retornarCuadricula(i,'fila'));
-          console.log(this.retornarCuadricula(i,'fila')*3);
-          console.log( index,posicionRepetido ,this.retornarCuadricula(index,'fila'));
-          let rep:Repetidos = new Repetidos(cuadricula, element,((cuadricula-1)*9)+(3*this.retornarCuadricula(i,'fila'))+(this.retornarCuadricula(i,'fila')*3)+(this.retornarCuadricula(index,'fila')));
-          repetidos.push(rep);     
-        }
+            if(repetidos.reduce((sum,element)=>element.posicion===posicionToArray?sum++:sum,0) === 0){
+              return index;
+            }
+            if(!repetidos.some(repetido=> repetido.posicion == posicionToArray)){
+
+                return posicion;
+            }
+          } 
+       });
       
+          if(element && posicionRepetido>=0){       
+            let cuadricula = fila+this.retornarCuadricula(posicionRepetido,'columna');
+            let rep:Repetidos = new Repetidos(cuadricula, element,((cuadricula-1)*9)+(3*this.retornarCuadricula(i,'fila'))+(this.retornarCuadricula(posicionRepetido ,'fila')));
+            repetidos.push(rep);     
+          }
+        
+    
       });
      
         //Cuando la fila está en un multiplo de 3
@@ -246,7 +233,6 @@ export class TableroComponent implements OnInit {
   }
 
   async setearError(number:any[],tipoError:string){
-    
     for (let index = 0; index < number.length; index++) {
       if(tipoError === 'vacio'){
         this.formSudoku.get(Object.keys(this.formSudoku.controls)[number[index]])?.setErrors({vacio:true});
